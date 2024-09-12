@@ -19,6 +19,7 @@ type DLL struct {
 }
 
 var ErrListFull = fmt.Errorf("List full")
+var ErrNotFound = fmt.Errorf("Not Found")
 
 func (this *DLL) grow() {
 	this.length++
@@ -94,6 +95,24 @@ func (this *DLL) Find(id int) *Node {
 	return nil
 }
 
+func (this *DLL) Del(id int) error {
+	node := this.Find(id)
+	if node == nil {
+		return ErrNotFound
+	}
+
+	if node.prev == nil {
+		this.first = node.next
+	}
+	if node.next == nil {
+		this.last = node.prev
+	}
+	node.prev.next = node.next
+	node.next.prev = node.prev
+	this.shrink()
+	return nil
+}
+
 func (this *DLL) PrintLTR() {
 	curr := this.first
 	for curr != nil {
@@ -131,5 +150,14 @@ func main() {
 	fmt.Println(dll.PutLast(Data{ID: 5, Value: "data5"}))
 	dll.PrintLTR()
 	fmt.Println(dll.PutLast(Data{ID: 6, Value: "data6"}))
+	dll.PrintLTR()
+	fmt.Println(dll.Del(6))
+	dll.PrintLTR()
+	fmt.Println(dll.Del(3))
+	dll.PrintLTR()
+	dll.PrintRTL()
+	fmt.Println(dll.PutLast(Data{ID: 6, Value: "data6"}))
+	dll.PrintLTR()
+	fmt.Println(dll.PutLast(Data{ID: 6, Value: "data6-2"}))
 	dll.PrintLTR()
 }
