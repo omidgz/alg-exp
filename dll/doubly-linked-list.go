@@ -18,6 +18,8 @@ type DLL struct {
 	first, last *Node
 }
 
+var ErrListFull = fmt.Errorf("List full")
+
 func (this *DLL) grow() {
 	this.length++
 }
@@ -30,6 +32,10 @@ func (this *DLL) PutLast(value Data) error {
 	if found := this.Find(value.ID); found != nil {
 		found.value = value
 		return nil
+	}
+
+	if this.length == this.size {
+		return ErrListFull
 	}
 
 	newNode := &Node{
@@ -53,6 +59,10 @@ func (this *DLL) PutFirst(value Data) error {
 	if found := this.Find(value.ID); found != nil {
 		found.value = value
 		return nil
+	}
+
+	if this.length == this.size {
+		return ErrListFull
 	}
 
 	newNode := &Node{
@@ -104,17 +114,22 @@ func (this *DLL) PrintRTL() {
 
 func main() {
 	dll := DLL{
-		size: 10,
+		size: 5,
 	}
 
-	dll.PutLast(Data{ID: 1, Value: "data1"})
+	fmt.Println(dll.PutLast(Data{ID: 1, Value: "data1"}))
 	dll.PrintLTR()
-	dll.PutLast(Data{ID: 2, Value: "data2"})
+	fmt.Println(dll.PutLast(Data{ID: 2, Value: "data2"}))
 	dll.PrintLTR()
-	dll.PutLast(Data{ID: 3, Value: "data3"})
+	fmt.Println(dll.PutLast(Data{ID: 3, Value: "data3"}))
 	dll.PrintLTR()
-	dll.PutFirst(Data{ID: 4, Value: "data4"})
+	fmt.Println(dll.PutFirst(Data{ID: 4, Value: "data4"}))
 	dll.PrintRTL()
-	dll.PutFirst(Data{ID: 3, Value: "data3-2"})
+	fmt.Println(dll.PutFirst(Data{ID: 3, Value: "data3-2"}))
 	dll.PrintRTL()
+	dll.PrintLTR()
+	fmt.Println(dll.PutLast(Data{ID: 5, Value: "data5"}))
+	dll.PrintLTR()
+	fmt.Println(dll.PutLast(Data{ID: 6, Value: "data6"}))
+	dll.PrintLTR()
 }
